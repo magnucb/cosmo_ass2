@@ -41,39 +41,21 @@ def run():
     ####
 
     delta_mod = []
-    for i in range(len(overlist)):
-        if i != 
-
-
-
-
-
-
-
+    for i in range(len(delta)):
+        for j in overlist:
+            if i != j:
+                delta_mod.append(delta[i])
 
     pl.figure()
-    pl.hist(delta_circumsized, normed=1, bins=100, label="Histogram")
+    pl.hist(delta_mod, normed=1, bins=100, label="Histogram")
     
-    prob = P(delta_circumsized, Sc)
-    pl.plot(delta_circumsized, prob, '.', label="Analytical")
+    prob = P(delta_mod, Sc)
+    pl.plot(delta_mod, prob, '.', label="Analytical")
     pl.legend(loc='best')
     pl.title("Exercise 2.5")
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 if __name__ == '__main__':
     run()
-
-    # another_run()
     pl.show()
