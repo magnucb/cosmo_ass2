@@ -5,7 +5,7 @@ def Sc(k):
     return 2*pl.pi/float(k)
 
 def sigma(Sc):
-    return pl.pi/float(Sc**4)
+    return (pl.pi/float(Sc**4))**0.5
 
 def P(delta, Sc):
     return pl.exp( -(delta**2)/(2.*sigma(Sc)**2) )/(sigma(Sc)*(2*pl.pi)**0.5)
@@ -37,6 +37,7 @@ def run():
     pl.plot(delta, prob, '.', label="Analytical")
     pl.legend(loc='best')
     pl.title("Exercise 2.4")
+    pl.savefig("ex24.png", dpi=300)
 
     ####
 
@@ -46,6 +47,8 @@ def run():
             if i != j:
                 delta_mod.append(delta[i])
 
+    delta_mod = pl.array(delta_mod)
+
     pl.figure()
     pl.hist(delta_mod, normed=1, bins=100, label="Histogram")
     
@@ -53,9 +56,9 @@ def run():
     pl.plot(delta_mod, prob, '.', label="Analytical")
     pl.legend(loc='best')
     pl.title("Exercise 2.5")
+    pl.savefig("ex25.png", dpi=300)
 
 
 
 if __name__ == '__main__':
     run()
-    pl.show()
