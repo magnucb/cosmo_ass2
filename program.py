@@ -10,7 +10,35 @@ def sigma(Sc):
 def P(delta, Sc):
     return pl.exp( -(delta**2)/(2.*sigma(Sc)**2) )/(sigma(Sc)*(2*pl.pi)**0.5)
 
+def Pnc(delta, Sc):
+    return P(delta, Sc) - pl.exp( -(2 - delta)**2/(2.*sigma(Sc)**2) )/(sigma(Sc)*(2*pl.pi)**0.5)
+
 def run():
+    N = int(1e5)
+
+    epsilon = 0.99
+    Sc = 2*(10*(pl.pi**0.25))
+    sigma_init = sigma(Sc)
+    delta = np.random.normal(loc=0.0, scale=sigma_init, size=N)
+
+    while Sc > 1.0:
+        Sc_new = Sc*epsilon
+        sigma_new = (sigma(Sc_new)**2 - sigma(Sc)**2)**0.5
+        Beta = np.random.normal(loc=0.0, scale=sigma_new, size=N)
+        delta += Beta
+
+        Sc = Sc_new
+    
+    pl.figure()
+    pl.hist(delta, normed=1, bins=100, label="Histogram")
+        
+    prob = P(delta, Sc)
+    pl.plot(delta, prob, '.', label="Analytical")
+    pl.legend(loc='best')
+    pl.title("Exercise 2.4")
+    pl.savefig("ex24.png", dpi=300)
+
+def run_again():
     N = int(1e5)
 
     epsilon = 0.99
@@ -29,30 +57,15 @@ def run():
                 overlist.append(k)
 
         Sc = Sc_new
-    
-    pl.figure()
-    pl.hist(delta, normed=1, bins=100, label="Histogram")
-        
-    prob = P(delta, Sc)
-    pl.plot(delta, prob, '.', label="Analytical")
-    pl.legend(loc='best')
-    pl.title("Exercise 2.4")
-    pl.savefig("ex24.png", dpi=300)
 
-    ####
+    #overlist = pl.unique(pl.sort(pl.array(overlist)))
 
-    delta_mod = []
-    for i in range(len(delta)):
-        for j in overlist:
-            if i != j:
-                delta_mod.append(delta[i])
-
-    delta_mod = pl.array(delta_mod)
+    delta_mod = pl.delete(delta, overlist)
 
     pl.figure()
     pl.hist(delta_mod, normed=1, bins=100, label="Histogram")
     
-    prob = P(delta_mod, Sc)
+    prob = Pnc(delta_mod, Sc)
     pl.plot(delta_mod, prob, '.', label="Analytical")
     pl.legend(loc='best')
     pl.title("Exercise 2.5")
@@ -62,3 +75,4 @@ def run():
 
 if __name__ == '__main__':
     run()
+    run_again()
